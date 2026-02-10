@@ -7,149 +7,211 @@
 
 <style>
 :root{
-  --pink:#ff4d88;
-  --pink2:#ff8fb1;
+  --pink:#ff2d79;
+  --pink2:#ff7fb2;
+  --hot:#ff4d88;
+  --cream:#fff7fb;
+  --ink:#17171c;
   --card:#ffffffee;
-  --ink:#1b1b1f;
-  --shadow:0 22px 70px rgba(0,0,0,.18);
-  --radius:26px;
+  --shadow:0 24px 80px rgba(0,0,0,.22);
+  --radius:28px;
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
 
 body{
   margin:0;
+  min-height:100vh;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--ink);
-  background:#fff;
   overflow-x:hidden;
   overflow-y:auto;
   display:flex;
   justify-content:center;
-  padding:40px 18px 90px;
+  align-items:flex-start;
+  padding:42px 18px 110px;
   position:relative;
+  background:#fff;
 }
 
-/* ===== ARTSY PMA WATERMARK BACKGROUND ===== */
+/* ====== MAXIMALIST PMA BACKGROUND ======
+   1) PMA art watermarked big + visible
+   2) soft color splashes
+   3) subtle repeating hearts pattern
+*/
 body::before{
   content:"";
   position:fixed;
-  inset:0;
+  inset:-20px;
+  z-index:-5;
+  pointer-events:none;
   background:
-    radial-gradient(900px 700px at 20% 15%, rgba(255,210,225,.45), transparent 60%),
-    radial-gradient(900px 700px at 85% 20%, rgba(255,170,210,.35), transparent 58%),
-    linear-gradient(180deg, rgba(255,245,248,.75), rgba(255,255,255,.88)),
+    /* watercolor splashes */
+    radial-gradient(900px 700px at 15% 18%, rgba(255,120,170,.55), transparent 60%),
+    radial-gradient(850px 650px at 88% 25%, rgba(255,70,140,.45), transparent 60%),
+    radial-gradient(1100px 900px at 55% 88%, rgba(255,220,235,.65), transparent 62%),
+
+    /* PMA watermark image (LOUD) */
     url("assets/pma_art.jpg");
-  background-size:cover;
-  background-position:center;
-  filter:saturate(1.15) contrast(1.05);
-  opacity:.95;
-  z-index:-4;
+
+  background-size: auto, auto, auto, cover;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+
+  /* make it look like “poster print” */
+  filter: saturate(1.25) contrast(1.1);
+  opacity: 1;
 }
 
-/* soft paper veil */
+/* reduce the wash-out overlay (this is what made it bland before) */
 body::after{
   content:"";
   position:fixed;
   inset:0;
-  background:linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.85));
-  z-index:-3;
+  z-index:-4;
+  pointer-events:none;
+
+  /* a LIGHT veil only — not whiteout */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.28));
 }
 
-/* subtle grain */
+/* subtle paper grain */
 .grain{
-  position:fixed;
-  inset:0;
-  background-image:radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);
-  background-size:3px 3px;
-  opacity:.1;
-  z-index:-2;
+  position:fixed; inset:0; z-index:-3; pointer-events:none;
+  background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity:.13;
 }
 
-/* floating hearts (subtle) */
-.hearts{position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.45;}
+/* repeating tiny hearts pattern (maximalist but tasteful) */
+.pattern{
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  opacity:.28;
+  background-image:
+    radial-gradient(circle at 10px 10px, rgba(255,45,121,.14) 2px, transparent 3px),
+    radial-gradient(circle at 30px 22px, rgba(255,127,178,.12) 2px, transparent 3px);
+  background-size: 44px 44px;
+}
+
+/* floating hearts */
+.hearts{ position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.70; }
 .heart{
-  position:absolute;
-  width:14px; height:14px;
-  background:rgba(255,77,136,.18);
-  transform:rotate(45deg);
-  animation:floatUp linear infinite;
+  position:absolute; width:16px; height:16px;
+  background: rgba(255,45,121,.22);
+  transform: rotate(45deg);
+  animation: floatUp linear infinite;
+  border-radius: 3px;
 }
 .heart::before,.heart::after{
+  content:""; position:absolute; width:16px; height:16px; background: inherit; border-radius:50%;
+}
+.heart::before{ left:-8px; }
+.heart::after{ top:-8px; }
+@keyframes floatUp{
+  from{ transform: translateY(110vh) rotate(45deg); }
+  to{ transform: translateY(-20vh) rotate(45deg); }
+}
+
+/* ===== Card ===== */
+.card{
+  width:min(720px, 100%);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.06);
+  padding: 26px 22px 22px;
+  text-align:center;
+  backdrop-filter: blur(10px);
+  position:relative;
+  overflow: visible;
+}
+
+/* maximalist “frame” border */
+.card::before{
   content:"";
   position:absolute;
-  width:14px; height:14px;
-  background:inherit;
-  border-radius:50%;
-}
-.heart::before{left:-7px;}
-.heart::after{top:-7px;}
-
-@keyframes floatUp{
-  from{transform:translateY(110vh) rotate(45deg);}
-  to{transform:translateY(-20vh) rotate(45deg);}
-}
-
-.card{
-  width:min(680px,100%);
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:26px 22px 22px;
-  text-align:center;
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(0,0,0,.06);
+  inset:-2px;
+  border-radius: calc(var(--radius) + 2px);
+  padding:2px;
+  background: linear-gradient(135deg, rgba(255,45,121,.85), rgba(255,127,178,.75), rgba(255,215,230,.85));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events:none;
+  opacity:.75;
 }
 
-/* ===== PMA TOP IMAGE (VISIBLE) ===== */
+/* PMA top image (your pma_stamp.jpg) */
 .pma-top{
-  width:min(540px,95%);
-  max-height:160px;
+  width:min(560px, 95%);
+  max-height:170px;
   object-fit:cover;
   border-radius:18px;
-  box-shadow:0 12px 28px rgba(0,0,0,.15);
+  box-shadow:0 14px 34px rgba(0,0,0,.16);
   border:1px solid rgba(0,0,0,.06);
-  margin:0 auto 14px;
+  margin: 0 auto 14px;
   display:block;
+  background: #fff;
+}
+
+/* small sticker tag under PMA image */
+.tag{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.80);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing:.02em;
+  margin-bottom: 10px;
 }
 
 h1{
-  font-size:clamp(26px,4.2vw,44px);
-  margin:10px 0 10px;
+  font-size: clamp(26px, 4.2vw, 46px);
+  margin: 10px 0 8px;
+  letter-spacing: -0.02em;
 }
 
 p{
-  font-size:16px;
-  line-height:1.35;
-  margin:0 0 18px;
-  opacity:.9;
+  font-size: 16px;
+  line-height: 1.35;
+  margin: 0 0 18px;
+  opacity:.92;
 }
 
+/* gif block */
 .gifwrap{
-  width:min(420px,100%);
-  margin:10px auto 18px;
+  width:min(430px, 100%);
+  margin: 10px auto 18px;
 }
-
 #gif{
   width:100%;
-  border-radius:20px;
-  box-shadow:0 14px 40px rgba(0,0,0,.12);
-  border:1px solid rgba(0,0,0,.06);
+  display:block;
+  border-radius: 22px;
+  box-shadow: 0 16px 46px rgba(0,0,0,.14);
+  border: 1px solid rgba(0,0,0,.06);
 }
-
 .label{
   margin-top:10px;
-  padding:10px 12px;
-  background:rgba(255,255,255,.85);
-  border-radius:14px;
-  border:1px solid rgba(0,0,0,.06);
-  font-size:14px;
-  opacity:.9;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(0,0,0,.06);
+  font-size: 14px;
+  opacity:.95;
 }
 
+/* Buttons */
 .buttons{
   position:relative;
-  min-height:120px;
+  min-height:130px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -158,167 +220,254 @@ p{
 
 button{
   border:none;
-  padding:14px 20px;
-  border-radius:999px;
-  font-size:16px;
-  font-weight:900;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 900;
   cursor:pointer;
-  box-shadow:0 10px 20px rgba(0,0,0,.12);
+  box-shadow: 0 12px 22px rgba(0,0,0,.12);
+  transition: transform .15s ease, filter .15s ease;
+  user-select:none;
 }
 
 .yes{
-  background:linear-gradient(135deg,var(--pink),var(--pink2));
-  color:white;
-  min-width:190px;
+  min-width: 200px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--hot), var(--pink2));
 }
+.yes:hover{ transform: translateY(-2px); filter: brightness(1.03); }
 
 .no{
   position:absolute;
-  background:rgba(255,255,255,.96);
-  min-width:132px;
-  border:1px solid rgba(0,0,0,.08);
+  min-width: 132px;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(0,0,0,.08);
 }
 
+/* Reveal section (make it FEEL like the “next page”) */
 .reveal{
   display:none;
-  margin-top:20px;
-  padding:18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.88);
-  border:1px solid rgba(0,0,0,.06);
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(500px 220px at 20% 0%, rgba(255,45,121,.18), transparent 60%),
+    radial-gradient(520px 260px at 85% 10%, rgba(255,127,178,.18), transparent 60%),
+    rgba(255,255,255,.86);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 18px 50px rgba(0,0,0,.10) inset;
 }
 
 .reveal h2{
-  text-align:center;
-  margin-bottom:12px;
+  margin: 6px 0 10px;
+  font-size: 22px;
+  letter-spacing: -0.01em;
 }
 
 .plan{
   text-align:center;
-  line-height:1.5;
+  line-height:1.55;
+  margin: 0 0 12px;
+  opacity:.96;
 }
 
+/* Polaroids */
 .polaroids{
-  margin-top:14px;
+  margin-top: 14px;
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
 }
 
 .polaroid{
-  background:white;
-  border-radius:14px;
-  padding:10px 10px 14px;
-  box-shadow:0 14px 34px rgba(0,0,0,.14);
-  transform:rotate(var(--tilt));
+  background: rgba(255,255,255,.98);
+  border-radius: 16px;
+  padding: 10px 10px 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.16);
+  border: 1px solid rgba(0,0,0,.06);
+  transform: rotate(var(--tilt));
+  transition: transform .18s ease;
+  position:relative;
 }
+.polaroid:hover{ transform: rotate(var(--tilt)) translateY(-2px) scale(1.03); }
 
 .polaroid img{
   width:100%;
   aspect-ratio:1/1;
   object-fit:cover;
-  border-radius:12px;
+  border-radius: 14px;
+  display:block;
 }
 
 .cap{
-  margin-top:10px;
-  font-size:13px;
-  font-weight:700;
-  opacity:.85;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  opacity: .86;
+  text-align:left;
+  padding: 0 2px;
 }
 
-@media(max-width:560px){
-  .polaroids{grid-template-columns:1fr;}
+/* “tape” */
+.polaroid::before,.polaroid::after{
+  content:"";
+  position:absolute;
+  width:56px; height:18px;
+  background: rgba(255,245,200,.92);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 8px;
+  box-shadow: 0 10px 16px rgba(0,0,0,.10);
 }
+.polaroid::before{ top:-8px; left:10px; transform: rotate(-10deg); }
+.polaroid::after{ top:-10px; right:10px; transform: rotate(12deg); }
+
+@media (max-width: 560px){
+  .polaroids{ grid-template-columns: 1fr; }
+}
+
+canvas{ position:fixed; inset:0; pointer-events:none; z-index:10; }
 </style>
 </head>
 
 <body>
-<div class="grain"></div>
-<div class="hearts" id="hearts"></div>
+  <div class="grain"></div>
+  <div class="pattern"></div>
+  <div class="hearts" id="hearts"></div>
+  <canvas id="confetti"></canvas>
 
-<div class="card">
+  <div class="card">
+    <img class="pma-top" src="assets/pma_stamp.jpg" alt="Philadelphia Museum of Art">
+    <div class="tag">🖼️ PMA-coded Valentine energy ✨💘</div>
 
-  <!-- Visible PMA image -->
-  <img class="pma-top" src="assets/pma_stamp.jpg" alt="Philadelphia Museum of Art">
+    <h1>Will you be my Valentine, Leah? 💘</h1>
 
-  <h1>Will you be my Valentine, Leah? 💘</h1>
-  <p>
-    Roses are red, violets are blue, I don’t know how to write poetry but I do know I &lt;3 YOU :) 🌹🌷🌼💐
-  </p>
-
-  <div class="gifwrap">
-    <img id="gif" src="assets/cat.gif" alt="cat gif">
-    <div class="label">Our little chaos 🐈‍⬛💘</div>
-  </div>
-
-  <div class="buttons" id="btnWrap">
-    <button class="yes" id="yesBtn">Yes 💕</button>
-    <button class="no" id="noBtn">No 😛</button>
-  </div>
-
-  <div class="reveal" id="reveal">
-    <h2>YAY 🥰 It’s a date</h2>
-    <p class="plan">
-      <b>Apricot Stone</b><br>
-      Friday, Feb 13 • 6:30 PM<br><br>
-      Philadelphia Museum of Art 🎨🖼️
+    <p>
+      Roses are red, violets are blue, I don’t know how to write poetry but I do know I &lt;3 YOU :) 🌹🌷🌼💐
     </p>
 
-    <div class="polaroids">
-      <div class="polaroid" style="--tilt:-2deg">
-        <img src="assets/leah_flowers_sq.jpg">
-        <div class="cap">Leah 🌼</div>
-      </div>
-      <div class="polaroid" style="--tilt:2deg">
-        <img src="assets/leah_cat_sq.jpg">
-        <div class="cap">Artist + floof</div>
-      </div>
-      <div class="polaroid" style="--tilt:-1.5deg">
-        <img src="assets/us_bar_sq.jpg">
-        <div class="cap">Us 💚</div>
-      </div>
-      <div class="polaroid" style="--tilt:1.8deg">
-        <img src="assets/us_car_sq.jpg">
-        <div class="cap">Happy chaos</div>
+    <div class="gifwrap">
+      <img id="gif" src="assets/cat.gif" alt="cat gif">
+      <div class="label">Our little chaos 🐈‍⬛💘</div>
+    </div>
+
+    <div class="buttons" id="btnWrap">
+      <button class="yes" id="yesBtn">Yes 💕</button>
+      <button class="no" id="noBtn">No 😛</button>
+    </div>
+
+    <div class="reveal" id="reveal">
+      <h2>YAY 🥰 It’s a date</h2>
+      <p class="plan">
+        <b>Apricot Stone</b><br>
+        Friday, Feb 13 • 6:30 PM
+      </p>
+
+      <div class="polaroids">
+        <div class="polaroid" style="--tilt:-2.2deg">
+          <img src="assets/leah_flowers_sq.jpg" alt="Leah with flowers">
+          <div class="cap">Leah 🌼</div>
+        </div>
+        <div class="polaroid" style="--tilt:2.1deg">
+          <img src="assets/leah_cat_sq.jpg" alt="Leah & the cat">
+          <div class="cap">Artist + floof</div>
+        </div>
+        <div class="polaroid" style="--tilt:-1.6deg">
+          <img src="assets/us_bar_sq.jpg" alt="Us at the bar">
+          <div class="cap">Us 💚</div>
+        </div>
+        <div class="polaroid" style="--tilt:1.8deg">
+          <img src="assets/us_car_sq.jpg" alt="Us in the car">
+          <div class="cap">Happy chaos</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 <script>
-/* hearts */
-const hearts=document.getElementById("hearts");
-for(let i=0;i<18;i++){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=(10+Math.random()*12)+"s";
-  h.style.animationDelay=(-Math.random()*12)+"s";
+/* floating hearts */
+const hearts = document.getElementById("hearts");
+for (let i = 0; i < 24; i++) {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.animationDuration = (10 + Math.random() * 14) + "s";
+  h.style.animationDelay = (-Math.random() * 14) + "s";
+  const s = 10 + Math.random() * 18;
+  h.style.width = s + "px";
+  h.style.height = s + "px";
+  h.style.opacity = (0.08 + Math.random() * 0.22);
   hearts.appendChild(h);
 }
 
-/* no button chaos */
-const noBtn=document.getElementById("noBtn");
-const wrap=document.getElementById("btnWrap");
-noBtn.addEventListener("mouseenter",()=>{
-  const r=wrap.getBoundingClientRect();
-  noBtn.style.left=Math.random()*(r.width-140)+"px";
-  noBtn.style.top=Math.random()*(r.height-52)+"px";
+/* runaway No button */
+const noBtn = document.getElementById("noBtn");
+const wrap = document.getElementById("btnWrap");
+const noTexts = ["No 😛", "Missed me 😜", "Too slow 😝", "Almost 😆", "Nice try 😏", "bleh 😛"];
+
+function moveNo(){
+  const rect = wrap.getBoundingClientRect();
+  const bw = 140, bh = 52;
+  const x = Math.max(0, Math.min(rect.width - bw, Math.random() * (rect.width - bw)));
+  const y = Math.max(0, Math.min(rect.height - bh, Math.random() * (rect.height - bh)));
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+  noBtn.textContent = noTexts[Math.floor(Math.random() * noTexts.length)];
+}
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", e => { e.preventDefault(); moveNo(); }, { passive:false });
+
+/* yes action */
+const yesBtn = document.getElementById("yesBtn");
+const gif = document.getElementById("gif");
+const reveal = document.getElementById("reveal");
+
+yesBtn.addEventListener("click", () => {
+  gif.src = "assets/celebrate.gif";
+  reveal.style.display = "block";
+  noBtn.style.display = "none";
+  yesBtn.textContent = "YESSS 💖";
+  launchConfetti();
+
+  setTimeout(() => {
+    reveal.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 120);
 });
 
-/* yes */
-const yesBtn=document.getElementById("yesBtn");
-const gif=document.getElementById("gif");
-const reveal=document.getElementById("reveal");
+/* confetti */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener("resize", resize); resize();
 
-yesBtn.addEventListener("click",()=>{
-  gif.src="assets/celebrate.gif";
-  reveal.style.display="block";
-  noBtn.style.display="none";
-  yesBtn.textContent="YESSS 💖";
-  reveal.scrollIntoView({behavior:"smooth"});
-});
+function launchConfetti(){
+  const pieces = Array.from({ length: 170 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * 200,
+    r: 4 + Math.random() * 6,
+    vy: 2 + Math.random() * 4,
+    vx: -2 + Math.random() * 4,
+    rot: Math.random() * Math.PI,
+    vr: -0.2 + Math.random() * 0.4
+  }));
+
+  const start = performance.now();
+  function animate(t){
+    const elapsed = t - start;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = "rgba(255,45,121,.55)";
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 1.35);
+      ctx.restore();
+    });
+    if(elapsed < 2600) requestAnimationFrame(animate);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  requestAnimationFrame(animate);
+}
 </script>
 </body>
 </html>
