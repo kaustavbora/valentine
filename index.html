@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will You Be My Valentine 💘</title>
+
+  <style>
+    :root{
+      --pink:#ff4d88;
+      --pink2:#ff8fb1;
+      --ink:#1b1b1f;
+      --card:#ffffffea;
+      --shadow: 0 22px 70px rgba(0,0,0,.18);
+      --radius: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+
+      /* IMPORTANT: allow scrolling (your “cut off” issue was from overflow:hidden) */
+      overflow-x:hidden;
+      overflow-y:auto;
+
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+
+      padding: 36px 18px 80px;
+      background: #fff;
+      position:relative;
+    }
+
+    /* ===== ARTSY BACKGROUND (PMA watermark style) =====
+       Uses assets/pma_art.jpg (already in your repo) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        /* watercolor wash */
+        radial-gradient(900px 700px at 20% 15%, rgba(255, 210, 225, .50), transparent 62%),
+        radial-gradient(900px 700px at 85% 20%, rgba(255, 170, 210, .40), transparent 58%),
+        radial-gradient(1100px 900px at 55% 80%, rgba(255, 235, 245, .65), transparent 60%),
+        /* PMA art */
+        url("assets/pma_art.jpg");
+      background-size: cover;
+      background-position: center;
+      /* keep it artsy, not bland */
+      filter: saturate(1.15) contrast(1.05);
+      opacity: 0.92;
+      z-index:-4;
+      pointer-events:none;
+    }
+
+    /* soft frosted veil so text stays readable */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.84));
+      z-index:-3;
+      pointer-events:none;
+    }
+
+    /* subtle paper grain */
+    .grain{
+      position:fixed;
+      inset:0;
+      background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);
+      background-size: 3px 3px;
+      opacity: .10;
+      z-index:-2;
+      pointer-events:none;
+    }
+
+    /* floating hearts (keep subtle) */
+    .hearts{ position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.55;}
+    .heart{
+      position:absolute; width:16px; height:16px;
+      background: rgba(255,77,136,.18);
+      transform: rotate(45deg);
+      animation: floatUp linear infinite;
+      border-radius: 3px;
+    }
+    .heart::before,.heart::after{
+      content:""; position:absolute; width:16px; height:16px; background: inherit; border-radius:50%;
+    }
+    .heart::before{ left:-8px; }
+    .heart::after{ top:-8px; }
+
+    @keyframes floatUp{
+      from{ transform: translateY(110vh) rotate(45deg); }
+      to{ transform: translateY(-20vh) rotate(45deg); }
+    }
+
+    .card{
+      width:min(680px, 100%);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,.06);
+      padding: 26px 22px 22px;
+      text-align:center;
+      backdrop-filter: blur(12px);
+
+      /* makes sure the reveal section is never “cut off” */
+      overflow: visible;
+    }
+
+    /* PMA image stamp (visible, not just text) */
+    .pma-stamp{
+      width: min(520px, 94%);
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.12);
+      border: 1px solid rgba(0,0,0,.06);
+      opacity: .92;
+      margin: 0 auto 14px;
+      display:block;
+    }
+    .pma-stamp-wrap{
+      position:relative;
+      display:block;
+    }
+    .pma-stamp-wrap::after{
+      content:"PMA • our happy place";
+      position:absolute;
+      left: 16px;
+      bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(0,0,0,.06);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    h1{
+      font-size: clamp(26px, 4.2vw, 44px);
+      margin: 8px 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    p{
+      font-size: 16px;
+      line-height: 1.35;
+      opacity:.9;
+      margin: 0 0 18px;
+    }
+
+    .gifwrap{
+      display:inline-block;
+      width: min(420px, 100%);
+      margin: 6px 0 18px;
+    }
+    #gif{
+      width:100%;
+      border-radius: 20px;
+      display:block;
+      box-shadow: 0 14px 40px rgba(0,0,0,.12);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .label{
+      margin: 10px auto 0;
+      text-align:left;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(0,0,0,.06);
+      font-size: 13px;
+      opacity: .95;
+    }
+
+    .buttons{
+      position:relative;
+      min-height: 120px; /* ensures Yes never disappears */
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    button{
+      border:none;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor:pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+      transition: transform .15s ease, filter .15s ease;
+      user-select:none;
+    }
+
+    .yes{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#fff;
+      min-width: 190px;
+    }
+    .yes:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+
+    .no{
+      position:absolute;
+      background: rgba(255,255,255,.96);
+      color:#333;
+      min-width: 132px;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+
+    .reveal{
+      display:none;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(0,0,0,.06);
+      text-align:left;
+    }
+
+    .reveal h2{
+      margin: 6px 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      text-align:center;
+    }
+
+    .plan{
+      text-align:center;
+      margin: 0 0 12px;
+      line-height: 1.5;
+      opacity:.95;
+    }
+
+    .polaroids{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .polaroid{
+      position:relative;
+      background: rgba(255,255,255,.98);
+      border-radius: 14px;
+      padding: 10px 10px 14px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.14);
+      transform: rotate(var(--tilt));
+      transition: transform .18s ease;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .polaroid:hover{ transform: rotate(var(--tilt)) translateY(-2px) scale(1.03); }
+
+    .polaroid img{
+      width:100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+      display:block;
+    }
+    .cap{
+      margin-top: 10px;
+      font-size: 12.5px;
+      opacity: .84;
+      text-align:left;
+      padding: 0 2px;
+      font-weight: 750;
+    }
+
+    .polaroid::before,.polaroid::after{
+      content:"";
+      position:absolute;
+      width:54px; height:18px;
+      background: rgba(255, 247, 204, .90);
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 8px 14px rgba(0,0,0,.08);
+      border-radius: 8px;
+    }
+    .polaroid::before{ top:-8px; left:10px; transform: rotate(-10deg); }
+    .polaroid::after{ top:-10px; right:10px; transform: rotate(12deg); }
+
+    .tiny{
+      font-size: 13px;
+      opacity: .7;
+      margin-top: 12px;
+      text-align:center;
+    }
+
+    @media (max-width: 560px){
+      .polaroids{ grid-template-columns: 1fr; }
+    }
+
+    canvas{ position:fixed; inset:0; pointer-events:none; z-index:10; }
+  </style>
+</head>
+
+<body>
+  <div class="grain"></div>
+  <div class="hearts" id="hearts"></div>
+  <canvas id="confetti"></canvas>
+
+  <div class="card">
+    <div class="pma-stamp-wrap">
+      <!-- Visible PMA image (not text). Uses your existing file: assets/pma_art.jpg -->
+      <img class="pma-stamp" src="assets/pma_art.jpg" alt="Philadelphia Museum of Art" />
+    </div>
+
+    <h1>Will you be my Valentine, Leah? 💘</h1>
+    <p>
+      Roses are red, violets are blue, I don’t know how to write poetry but I do know I &lt;3 YOU :) 🌹🌷🌼💐
+    </p>
+
+    <div class="gifwrap">
+      <img id="gif" src="assets/cat.gif" alt="cat gif" />
+      <div class="label"><b>Exhibit:</b> Kaustav’s Cat, judging the “No” button (2026) 😼</div>
+    </div>
+
+    <div class="buttons" id="btnWrap">
+      <button class="yes" id="yesBtn">Yes 💕</button>
+      <button class="no" id="noBtn">No 😛</button>
+    </div>
+
+    <div class="reveal" id="reveal">
+      <h2>YAY 🥰 It’s a date</h2>
+      <p class="plan">
+        We’re going to <b>Apricot Stone</b><br/>
+        Friday, Feb 13 • 6:30 PM<br/>
+        And after… <b>Philadelphia Museum of Art</b> 🎨🖼️
+      </p>
+
+      <div class="polaroids">
+        <div class="polaroid" style="--tilt:-2.5deg">
+          <img src="assets/leah_flowers_sq.jpg" alt="Leah with flowers">
+          <div class="cap">Leah (the artist) + flowers 🌼</div>
+        </div>
+        <div class="polaroid" style="--tilt:2.2deg">
+          <img src="assets/leah_cat_sq.jpg" alt="Leah & the cat">
+          <div class="cap">Leah + floof 🐈</div>
+        </div>
+        <div class="polaroid" style="--tilt:-1.4deg">
+          <img src="assets/us_bar_sq.jpg" alt="Us at the bar">
+          <div class="cap">Us, being us 💚</div>
+        </div>
+        <div class="polaroid" style="--tilt:1.8deg">
+          <img src="assets/us_car_sq.jpg" alt="Us in the car">
+          <div class="cap">Happy chaos 🚗✨</div>
+        </div>
+      </div>
+
+      <div class="tiny">Scroll freely now — nothing should be cut off anymore ✨</div>
+    </div>
+  </div>
+
+  <script>
+    // floating hearts (subtle)
+    const hearts = document.getElementById("hearts");
+    for (let i = 0; i < 22; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = (10 + Math.random() * 12) + "s";
+      h.style.animationDelay = (-Math.random() * 12) + "s";
+      h.style.opacity = (0.10 + Math.random() * 0.22);
+      const s = 10 + Math.random() * 18;
+      h.style.width = s + "px";
+      h.style.height = s + "px";
+      hearts.appendChild(h);
+    }
+
+    // no button chaos
+    const noBtn = document.getElementById("noBtn");
+    const wrap = document.getElementById("btnWrap");
+    const noTexts = ["No 😛", "Missed me 😜", "Too slow 😝", "Almost 😆", "Nice try 😏", "bleh 😛"];
+
+    function moveNo() {
+      const rect = wrap.getBoundingClientRect();
+      const bw = 140, bh = 52;
+      const x = Math.max(0, Math.min(rect.width - bw, Math.random() * (rect.width - bw)));
+      const y = Math.max(0, Math.min(rect.height - bh, Math.random() * (rect.height - bh)));
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.textContent = noTexts[Math.floor(Math.random() * noTexts.length)];
+    }
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("touchstart", e => { e.preventDefault(); moveNo(); }, { passive:false });
+
+    // yes action
+    const yesBtn = document.getElementById("yesBtn");
+    const gif = document.getElementById("gif");
+    const reveal = document.getElementById("reveal");
+
+    yesBtn.addEventListener("click", () => {
+      gif.src = "assets/celebrate.gif";
+      reveal.style.display = "block";
+      noBtn.style.display = "none";
+      yesBtn.textContent = "YESSS 💖";
+      launchConfetti();
+
+      // ensure the newly-revealed content is fully reachable
+      setTimeout(() => {
+        reveal.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    });
+
+    // confetti
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function launchConfetti(){
+      const pieces = Array.from({ length: 170 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 200,
+        r: 4 + Math.random() * 6,
+        vy: 2 + Math.random() * 4,
+        vx: -2 + Math.random() * 4,
+        rot: Math.random() * Math.PI,
+        vr: -0.2 + Math.random() * 0.4
+      }));
+
+      const start = performance.now();
+      function animate(t){
+        const elapsed = t - start;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p=>{
+          p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = "rgba(255,77,136,.55)";
+          ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 1.35);
+          ctx.restore();
+        });
+        if(elapsed < 2600) requestAnimationFrame(animate);
+        else ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+      requestAnimationFrame(animate);
+    }
+  </script>
+</body>
+</html>
